@@ -1,0 +1,1569 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ArticleHub - Plateforme d'articles</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        :root {
+            --primary: #4361ee;
+            --secondary: #3a0ca3;
+            --accent: #f72585;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --gray: #6c757d;
+            --light-gray: #e9ecef;
+            --success: #4cc9f0;
+            --border-radius: 8px;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        body {
+            background-color: #f5f7ff;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header */
+        header {
+            background-color: white;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+        }
+        
+        .logo i {
+            color: var(--accent);
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 25px;
+            align-items: center;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border-radius: var(--border-radius);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            font-size: 1rem;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--secondary);
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+        
+        .btn-outline:hover {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        
+        /* Main content */
+        main {
+            padding: 40px 0;
+        }
+        
+        .page-title {
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+            color: var(--dark);
+        }
+        
+        /* Articles grid */
+        .articles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+        
+        .article-card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s;
+        }
+        
+        .article-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .article-image {
+            height: 200px;
+            background-color: var(--light-gray);
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .article-content {
+            padding: 25px;
+        }
+        
+        .article-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+        
+        .article-author {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .article-author .avatar {
+            width: 30px;
+            height: 30px;
+            font-size: 0.8rem;
+        }
+        
+        .article-category {
+            background-color: var(--light-gray);
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+        
+        .article-title {
+            font-size: 1.4rem;
+            margin-bottom: 10px;
+            color: var(--dark);
+            text-decoration: none;
+            display: block;
+        }
+        
+        .article-title:hover {
+            color: var(--primary);
+        }
+        
+        .article-excerpt {
+            color: var(--gray);
+            margin-bottom: 20px;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .article-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid var(--light-gray);
+            padding-top: 15px;
+        }
+        
+        .article-comments {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: var(--gray);
+        }
+        
+        /* Article detail page */
+        .article-detail {
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            padding: 40px;
+            margin-bottom: 40px;
+        }
+        
+        .article-header {
+            margin-bottom: 30px;
+        }
+        
+        .article-detail-title {
+            font-size: 2.2rem;
+            margin-bottom: 15px;
+            line-height: 1.3;
+        }
+        
+        .article-detail-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--light-gray);
+        }
+        
+        .article-detail-author {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .article-detail-author .avatar {
+            width: 50px;
+            height: 50px;
+        }
+        
+        .author-info h4 {
+            margin-bottom: 5px;
+        }
+        
+        .author-info p {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+        
+        .article-body {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 40px;
+        }
+        
+        .article-body p {
+            margin-bottom: 20px;
+        }
+        
+        /* Comments section */
+        .comments-section {
+            margin-top: 60px;
+        }
+        
+        .comments-title {
+            font-size: 1.8rem;
+            margin-bottom: 30px;
+            color: var(--dark);
+        }
+        
+        .comment-form {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 30px;
+            box-shadow: var(--shadow);
+            margin-bottom: 40px;
+        }
+        
+        .form-title {
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            transition: border 0.3s;
+        }
+        
+        .form-control:focus {
+            border-color: var(--primary);
+            outline: none;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        textarea.form-control {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        .comment-toggle {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 15px;
+        }
+        
+        .comment-toggle-btn {
+            padding: 8px 20px;
+            border-radius: 30px;
+            background-color: var(--light-gray);
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .comment-toggle-btn.active {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .comments-list {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+        
+        .comment {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 25px;
+            box-shadow: var(--shadow);
+        }
+        
+        .comment-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+        
+        .comment-author {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .comment-author .avatar {
+            width: 40px;
+            height: 40px;
+            background-color: var(--success);
+        }
+        
+        .comment-author h4 {
+            font-size: 1.1rem;
+        }
+        
+        .comment-meta {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+        
+        .comment-body {
+            line-height: 1.6;
+        }
+        
+        .visitor-badge {
+            background-color: var(--light-gray);
+            color: var(--gray);
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        /* Categories sidebar */
+        .categories-sidebar {
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .sidebar-title {
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            color: var(--dark);
+        }
+        
+        .categories-list {
+            list-style: none;
+        }
+        
+        .categories-list li {
+            margin-bottom: 10px;
+        }
+        
+        .categories-list a {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 15px;
+            background-color: var(--light-gray);
+            border-radius: var(--border-radius);
+            text-decoration: none;
+            color: var(--dark);
+            transition: all 0.3s;
+        }
+        
+        .categories-list a:hover {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .category-count {
+            background-color: white;
+            color: var(--dark);
+            padding: 3px 8px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+        
+        .categories-list a:hover .category-count {
+            background-color: var(--secondary);
+            color: white;
+        }
+        
+        /* Login/Register forms */
+        .auth-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 70vh;
+        }
+        
+        .auth-card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            padding: 40px;
+            width: 100%;
+            max-width: 500px;
+        }
+        
+        .auth-tabs {
+            display: flex;
+            margin-bottom: 30px;
+            border-bottom: 1px solid var(--light-gray);
+        }
+        
+        .auth-tab {
+            flex: 1;
+            padding: 15px;
+            text-align: center;
+            background: none;
+            border: none;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--gray);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .auth-tab.active {
+            color: var(--primary);
+            border-bottom: 3px solid var(--primary);
+        }
+        
+        .auth-form {
+            display: none;
+        }
+        
+        .auth-form.active {
+            display: block;
+        }
+        
+        /* Create article form */
+        .create-article-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .create-article-form {
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            padding: 40px;
+        }
+        
+        /* Search results */
+        .search-results {
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .results-count {
+            color: var(--gray);
+            margin-bottom: 20px;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: var(--dark);
+            color: white;
+            padding: 50px 0 30px;
+            margin-top: 60px;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+        
+        .footer-section h3 {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            color: white;
+        }
+        
+        .footer-section p {
+            color: #adb5bd;
+            margin-bottom: 20px;
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-links a {
+            color: #adb5bd;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-links a:hover {
+            color: white;
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid #495057;
+            color: #adb5bd;
+            font-size: 0.9rem;
+        }
+        
+        /* Messages */
+        .message {
+            padding: 15px;
+            border-radius: var(--border-radius);
+            margin-bottom: 20px;
+        }
+        
+        .message.success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .message.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .message.info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .articles-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .article-detail {
+                padding: 25px;
+            }
+            
+            .article-detail-meta {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .content-wrapper {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* Utility classes */
+        .hidden {
+            display: none !important;
+        }
+        
+        .text-center {
+            text-align: center;
+        }
+        
+        .mt-4 {
+            margin-top: 40px;
+        }
+        
+        .mb-4 {
+            margin-bottom: 40px;
+        }
+        
+        .content-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 40px;
+        }
+        
+        @media (max-width: 992px) {
+            .content-wrapper {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 40px;
+        }
+        
+        .pagination a, .pagination span {
+            display: inline-block;
+            padding: 10px 15px;
+            background-color: white;
+            border-radius: var(--border-radius);
+            text-decoration: none;
+            color: var(--dark);
+            box-shadow: var(--shadow);
+        }
+        
+        .pagination a:hover {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .pagination .active {
+            background-color: var(--primary);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <nav class="navbar">
+                <a href="#" class="logo">
+                    <i class="fas fa-newspaper"></i>
+                    ArticleHub
+                </a>
+                <div class="nav-links">
+                    <a href="#" id="homeLink" class="active">Accueil</a>
+                    <a href="#" id="createArticleLink">Nouvel article</a>
+                    <a href="#" id="categoriesLink">Catégories</a>
+                    <div class="user-info">
+                        <div class="avatar" id="userAvatar">V</div>
+                        <span id="userName">Visiteur</span>
+                        <button class="btn btn-outline" id="loginBtn">Connexion</button>
+                        <button class="btn btn-primary hidden" id="registerBtn">Inscription</button>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content - Dynamic -->
+    <main class="container">
+        <div id="contentArea">
+            <!-- Content will be loaded dynamically -->
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>ArticleHub</h3>
+                    <p>Une plateforme de partage d'articles et de connaissances. Créez, partagez et discutez avec notre communauté.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Liens rapides</h3>
+                    <ul class="footer-links">
+                        <li><a href="#" id="footerHomeLink">Accueil</a></li>
+                        <li><a href="#" id="footerCreateLink">Nouvel article</a></li>
+                        <li><a href="#" id="footerCategoriesLink">Catégories</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Statistiques</h3>
+                    <ul class="footer-links">
+                        <li>Articles: <span id="statsArticles">0</span></li>
+                        <li>Utilisateurs: <span id="statsUsers">0</span></li>
+                        <li>Commentaires: <span id="statsComments">0</span></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2024 ArticleHub. Tous droits réservés.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Modals -->
+    <div id="loginModal" class="hidden">
+        <div class="modal-overlay">
+            <div class="modal">
+                <div class="modal-header">
+                    <h2 class="modal-title">Connexion</h2>
+                    <button class="close-modal">&times;</button>
+                </div>
+                <div class="modal-content">
+                    <form id="loginForm">
+                        <div class="form-group">
+                            <label for="loginEmail">Email</label>
+                            <input type="email" id="loginEmail" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="loginPassword">Mot de passe</label>
+                            <input type="password" id="loginPassword" class="form-control" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Se connecter</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Données simulées
+        const mockData = {
+            currentUser: null,
+            articles: [],
+            categories: [],
+            comments: [],
+            users: []
+        };
+
+        // Initialiser les données
+        function initData() {
+            // Catégories
+            mockData.categories = [
+                { id: 1, name: 'Technologie', description: 'Actualités, tutoriels et analyses sur les nouvelles technologies', count: 8 },
+                { id: 2, name: 'Santé', description: 'Conseils santé, bien-être et médecine préventive', count: 5 },
+                { id: 3, name: 'Voyage', description: 'Récits de voyage, guides pratiques et conseils touristiques', count: 4 },
+                { id: 4, name: 'Cuisine', description: 'Recettes, techniques culinaires et astuces de cuisine', count: 6 },
+                { id: 5, name: 'Sport', description: 'Actualités sportives, conseils d\'entraînement et nutrition', count: 5 },
+                { id: 6, name: 'Éducation', description: 'Pédagogie, conseils d\'apprentissage et innovations éducatives', count: 5 },
+                { id: 7, name: 'Finance', description: 'Gestion budgétaire, investissements et actualités économiques', count: 4 },
+                { id: 8, name: 'Mode', description: 'Tendances, conseils style et actualités de la mode', count: 4 }
+            ];
+
+            // Utilisateurs
+            mockData.users = [
+                { id: 1, name: 'jean_martin', email: 'jean.martin@email.com', role: 'subscriber', avatar: 'JM' },
+                { id: 2, name: 'sophie_leroy', email: 'sophie.leroy@gmail.com', role: 'subscriber', avatar: 'SL' },
+                { id: 3, name: 'admin_blog', email: 'admin@blogcms.com', role: 'admin', avatar: 'AB' },
+                { id: 4, name: 'marie_dubois', email: 'marie.dubois@email.com', role: 'editor', avatar: 'MD' },
+                { id: 5, name: 'pierre_leroy', email: 'pierre.leroy@gmail.com', role: 'author', avatar: 'PL' }
+            ];
+
+            // Articles
+            mockData.articles = [
+                {
+                    id: 1,
+                    title: 'Les Nouvelles Tensions Technologiques en 2024',
+                    content: 'Explorez les technologies émergentes qui vont transformer notre quotidien cette année. L\'intelligence artificielle continue d\'évoluer à un rythme effréné, avec des applications dans tous les secteurs. Les véhicules autonomes deviennent plus accessibles, et la réalité virtuelle s\'immisce dans notre vie professionnelle et personnelle. Cette révolution technologique soulève également des questions éthiques importantes concernant la vie privée et la sécurité des données. Les entreprises doivent s\'adapter rapidement à ces changements pour rester compétitives.',
+                    excerpt: 'Explorez les technologies émergentes qui vont transformer notre quotidien cette année...',
+                    author: 'pierre_leroy',
+                    category: 'Technologie',
+                    date: '2024-02-20',
+                    views: 1245,
+                    comments: 3,
+                    image: 'tech1.jpg'
+                },
+                {
+                    id: 2,
+                    title: 'Comment Maintenir une Bonne Santé au Travail',
+                    content: 'Des conseils pratiques pour préserver votre santé physique et mentale au travail. Apprenez à organiser votre espace de travail ergonomique, à gérer votre temps efficacement pour éviter le burnout, et à intégrer des pauses régulières dans votre journée. Nous aborderons également l\'importance de l\'activité physique, d\'une alimentation équilibrée et de la gestion du stress pour maintenir un équilibre optimal entre vie professionnelle et personnelle.',
+                    excerpt: 'Des conseils pratiques pour préserver votre santé physique et mentale...',
+                    author: 'sophie_martin',
+                    category: 'Santé',
+                    date: '2024-02-25',
+                    views: 876,
+                    comments: 1,
+                    image: 'sante1.jpg'
+                },
+                {
+                    id: 3,
+                    title: 'Les 10 Destinations à Visiter Absolument en 2024',
+                    content: 'Découvrez les destinations qui vont marquer l\'année 2024. De l\'Islande avec ses paysages volcaniques époustouflants au Japon avec sa culture unique en passant par le Maroc et ses trésors cachés, cette sélection vous fera voyager à travers le monde. Nous avons pris en compte l\'accessibilité, l\'intérêt culturel, la beauté naturelle et les tendances du tourisme durable pour vous proposer cette liste exclusive.',
+                    excerpt: 'Découvrez les destinations qui vont marquer l\'année 2024...',
+                    author: 'jean_dupont',
+                    category: 'Voyage',
+                    date: '2024-03-05',
+                    views: 543,
+                    comments: 0,
+                    image: 'voyage1.jpg'
+                },
+                {
+                    id: 4,
+                    title: 'Recette du Gâteau au Chocolat Fondant',
+                    content: 'Une recette simple et rapide pour un gâteau au chocolat irrésistible. Avec seulement quelques ingrédients de base, vous pourrez préparer ce dessert gourmand en moins d\'une heure. Nous vous dévoilons tous les secrets pour obtenir un gâteau moelleux à l\'intérieur avec une croûte légèrement croustillante. Parfait pour les occasions spéciales ou simplement pour se faire plaisir.',
+                    excerpt: 'Une recette simple et rapide pour un gâteau au chocolat irrésistible...',
+                    author: 'lucie_bernard',
+                    category: 'Cuisine',
+                    date: '2024-03-10',
+                    views: 2345,
+                    comments: 2,
+                    image: 'cuisine1.jpg'
+                }
+            ];
+
+            // Commentaires
+            mockData.comments = [
+                {
+                    id: 1,
+                    articleId: 1,
+                    author: 'thomas_petit',
+                    email: 'thomas.petit@gmail.com',
+                    content: 'Excellent article, très bien documenté !',
+                    date: '2024-02-21',
+                    isVisitor: false
+                },
+                {
+                    id: 2,
+                    articleId: 1,
+                    author: null,
+                    email: 'marie.petit@yahoo.fr',
+                    content: 'Très intéressant, merci pour ces informations.',
+                    date: '2024-02-22',
+                    isVisitor: true,
+                    visitorName: 'Marie'
+                },
+                {
+                    id: 3,
+                    articleId: 2,
+                    author: 'isabelle_leroy',
+                    email: 'isabelle.leroy@gmail.com',
+                    content: 'Cela m\'a beaucoup aidé, merci pour ces conseils.',
+                    date: '2024-02-25',
+                    isVisitor: false
+                }
+            ];
+        }
+
+        // Fonctions d'affichage
+        function renderHomePage() {
+            const articlesHTML = mockData.articles.map(article => `
+                <div class="article-card" data-article-id="${article.id}">
+                    <div class="article-image" style="background-image: url('https://images.unsplash.com/photo-${article.image ? article.image : '1499750310107-5fef28a66643?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'}');"></div>
+                    <div class="article-content">
+                        <div class="article-meta">
+                            <div class="article-author">
+                                <div class="avatar">${getInitials(article.author)}</div>
+                                <span>${article.author}</span>
+                            </div>
+                            <span class="article-category">${article.category}</span>
+                        </div>
+                        <a href="#" class="article-title view-article" data-article-id="${article.id}">
+                            ${article.title}
+                        </a>
+                        <p class="article-excerpt">${article.excerpt}</p>
+                        <div class="article-footer">
+                            <span class="article-date">${formatDate(article.date)}</span>
+                            <div class="article-comments">
+                                <i class="fas fa-comment"></i>
+                                <span>${article.comments}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            const categoriesHTML = mockData.categories.map(category => `
+                <li>
+                    <a href="#" class="filter-category" data-category-id="${category.id}">
+                        <span>${category.name}</span>
+                        <span class="category-count">${category.count}</span>
+                    </a>
+                </li>
+            `).join('');
+
+            const content = `
+                <div class="content-wrapper">
+                    <div>
+                        <h1 class="page-title">Articles récents</h1>
+                        
+                        <div class="articles-grid" id="articlesGrid">
+                            ${articlesHTML}
+                        </div>
+                        
+                        <div class="pagination">
+                            <a href="#" class="active">1</a>
+                            <a href="#">2</a>
+                            <a href="#">3</a>
+                            <a href="#">Suivant</a>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <div class="categories-sidebar">
+                            <h3 class="sidebar-title">Catégories</h3>
+                            <ul class="categories-list">
+                                ${categoriesHTML}
+                            </ul>
+                        </div>
+                        
+                        <div class="categories-sidebar">
+                            <h3 class="sidebar-title">Articles populaires</h3>
+                            <div id="popularArticles">
+                                ${mockData.articles.slice(0, 3).map(article => `
+                                    <div class="popular-article mb-4">
+                                        <a href="#" class="view-article" data-article-id="${article.id}">
+                                            <h4>${article.title}</h4>
+                                        </a>
+                                        <div class="article-meta">
+                                            <span>${article.author}</span>
+                                            <span>${article.views} vues</span>
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('contentArea').innerHTML = content;
+            updateStats();
+            attachArticleListeners();
+            attachCategoryFilterListeners();
+        }
+
+        function renderArticlePage(articleId) {
+            const article = mockData.articles.find(a => a.id == articleId);
+            if (!article) {
+                renderHomePage();
+                return;
+            }
+
+            const articleComments = mockData.comments.filter(c => c.articleId == articleId);
+            const user = mockData.users.find(u => u.name === article.author);
+
+            const commentsHTML = articleComments.map(comment => `
+                <div class="comment">
+                    <div class="comment-header">
+                        <div class="comment-author">
+                            <div class="avatar">${comment.isVisitor ? getInitials(comment.visitorName || 'Visiteur') : getInitials(comment.author)}</div>
+                            <div>
+                                <h4>${comment.isVisitor ? (comment.visitorName || 'Visiteur') : comment.author}</h4>
+                                ${comment.isVisitor ? '<span class="visitor-badge">Visiteur</span>' : ''}
+                            </div>
+                        </div>
+                        <div class="comment-meta">${formatDate(comment.date)}</div>
+                    </div>
+                    <div class="comment-body">
+                        ${comment.content}
+                    </div>
+                </div>
+            `).join('');
+
+            const content = `
+                <div class="article-detail">
+                    <div class="article-header">
+                        <h1 class="article-detail-title">${article.title}</h1>
+                        <div class="article-detail-meta">
+                            <div class="article-detail-author">
+                                <div class="avatar">${getInitials(article.author)}</div>
+                                <div class="author-info">
+                                    <h4>${article.author}</h4>
+                                    <p>${formatDate(article.date)} • ${article.views} vues • ${article.category}</p>
+                                </div>
+                            </div>
+                            <button class="btn btn-outline" id="backToHome">Retour aux articles</button>
+                        </div>
+                    </div>
+                    
+                    <div class="article-body">
+                        <p>${article.content}</p>
+                    </div>
+                    
+                    <div class="comments-section">
+                        <h2 class="comments-title">Commentaires (${articleComments.length})</h2>
+                        
+                        <div class="comment-form">
+                            <h3 class="form-title">Ajouter un commentaire</h3>
+                            <div class="comment-toggle">
+                                <button class="comment-toggle-btn ${mockData.currentUser ? 'active' : ''}" id="userCommentBtn">Utilisateur</button>
+                                <button class="comment-toggle-btn ${!mockData.currentUser ? 'active' : ''}" id="visitorCommentBtn">Visiteur</button>
+                            </div>
+                            
+                            <form id="commentForm">
+                                <div id="visitorFields" class="${mockData.currentUser ? 'hidden' : ''}">
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="commentName">Nom (visiteur)</label>
+                                            <input type="text" id="commentName" class="form-control" ${mockData.currentUser ? 'disabled' : ''}>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="commentEmail">Email (visiteur)</label>
+                                            <input type="email" id="commentEmail" class="form-control" ${mockData.currentUser ? 'disabled' : ''}>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="commentContent">Commentaire</label>
+                                    <textarea id="commentContent" class="form-control" required></textarea>
+                                </div>
+                                
+                                <button type="submit" class="btn btn-primary">Publier le commentaire</button>
+                            </form>
+                        </div>
+                        
+                        <div class="comments-list">
+                            ${commentsHTML || '<p>Aucun commentaire pour le moment. Soyez le premier à commenter !</p>'}
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('contentArea').innerHTML = content;
+            
+            // Attacher les événements
+            document.getElementById('backToHome').addEventListener('click', (e) => {
+                e.preventDefault();
+                renderHomePage();
+            });
+
+            document.getElementById('userCommentBtn').addEventListener('click', () => {
+                if (mockData.currentUser) {
+                    document.getElementById('userCommentBtn').classList.add('active');
+                    document.getElementById('visitorCommentBtn').classList.remove('active');
+                    document.getElementById('visitorFields').classList.add('hidden');
+                    document.getElementById('commentName').disabled = true;
+                    document.getElementById('commentEmail').disabled = true;
+                } else {
+                    showMessage('Vous devez être connecté pour commenter en tant qu\'utilisateur.', 'error');
+                }
+            });
+
+            document.getElementById('visitorCommentBtn').addEventListener('click', () => {
+                document.getElementById('userCommentBtn').classList.remove('active');
+                document.getElementById('visitorCommentBtn').classList.add('active');
+                document.getElementById('visitorFields').classList.remove('hidden');
+                document.getElementById('commentName').disabled = false;
+                document.getElementById('commentEmail').disabled = false;
+            });
+
+            document.getElementById('commentForm').addEventListener('submit', (e) => {
+                e.preventDefault();
+                addComment(articleId);
+            });
+        }
+
+        function renderCreateArticlePage() {
+            if (!mockData.currentUser) {
+                showMessage('Vous devez être connecté pour créer un article.', 'error');
+                renderLoginPage();
+                return;
+            }
+
+            const categoriesOptions = mockData.categories.map(category => 
+                `<option value="${category.id}">${category.name}</option>`
+            ).join('');
+
+            const content = `
+                <div class="create-article-container">
+                    <h1 class="page-title">Créer un nouvel article</h1>
+                    
+                    <div class="create-article-form">
+                        <form id="articleForm">
+                            <div class="form-group">
+                                <label for="articleTitle">Titre</label>
+                                <input type="text" id="articleTitle" class="form-control" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="articleCategory">Catégorie</label>
+                                <select id="articleCategory" class="form-control">
+                                    <option value="">Sélectionnez une catégorie</option>
+                                    ${categoriesOptions}
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="articleContent">Contenu</label>
+                                <textarea id="articleContent" class="form-control" rows="10" required></textarea>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="articleImage">URL de l'image (optionnel)</label>
+                                <input type="text" id="articleImage" class="form-control" placeholder="https://example.com/image.jpg">
+                            </div>
+                            
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-primary">Publier l'article</button>
+                                <button type="button" class="btn btn-outline" id="cancelArticle">Annuler</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('contentArea').innerHTML = content;
+
+            document.getElementById('articleForm').addEventListener('submit', (e) => {
+                e.preventDefault();
+                createArticle();
+            });
+
+            document.getElementById('cancelArticle').addEventListener('click', () => {
+                renderHomePage();
+            });
+        }
+
+        function renderLoginPage() {
+            const content = `
+                <div class="auth-container">
+                    <div class="auth-card">
+                        <div class="auth-tabs">
+                            <button class="auth-tab active" id="loginTab">Connexion</button>
+                            <button class="auth-tab" id="registerTab">Inscription</button>
+                        </div>
+                        
+                        <form id="loginForm" class="auth-form active">
+                            <div class="form-group">
+                                <label for="loginEmail">Email</label>
+                                <input type="email" id="loginEmail" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="loginPassword">Mot de passe</label>
+                                <input type="password" id="loginPassword" class="form-control" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Se connecter</button>
+                        </form>
+                        
+                        <form id="registerForm" class="auth-form">
+                            <div class="form-group">
+                                <label for="registerUsername">Nom d'utilisateur</label>
+                                <input type="text" id="registerUsername" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="registerEmail">Email</label>
+                                <input type="email" id="registerEmail" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="registerPassword">Mot de passe</label>
+                                <input type="password" id="registerPassword" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="registerConfirmPassword">Confirmer le mot de passe</label>
+                                <input type="password" id="registerConfirmPassword" class="form-control" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">S'inscrire</button>
+                        </form>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('contentArea').innerHTML = content;
+
+            // Gestion des onglets
+            document.getElementById('loginTab').addEventListener('click', () => {
+                document.getElementById('loginTab').classList.add('active');
+                document.getElementById('registerTab').classList.remove('active');
+                document.getElementById('loginForm').classList.add('active');
+                document.getElementById('registerForm').classList.remove('active');
+            });
+
+            document.getElementById('registerTab').addEventListener('click', () => {
+                document.getElementById('registerTab').classList.add('active');
+                document.getElementById('loginTab').classList.remove('active');
+                document.getElementById('registerForm').classList.add('active');
+                document.getElementById('loginForm').classList.remove('active');
+            });
+
+            // Gestion de la connexion
+            document.getElementById('loginForm').addEventListener('submit', (e) => {
+                e.preventDefault();
+                loginUser();
+            });
+
+            // Gestion de l'inscription
+            document.getElementById('registerForm').addEventListener('submit', (e) => {
+                e.preventDefault();
+                registerUser();
+            });
+        }
+
+        // Fonctions utilitaires
+        function getInitials(name) {
+            if (!name) return 'V';
+            return name.split('_').map(part => part.charAt(0).toUpperCase()).join('');
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('fr-FR', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+        }
+
+        function showMessage(message, type = 'info') {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${type}`;
+            messageDiv.textContent = message;
+            
+            const container = document.querySelector('.container');
+            const main = document.querySelector('main');
+            container.insertBefore(messageDiv, main);
+            
+            setTimeout(() => {
+                messageDiv.remove();
+            }, 5000);
+        }
+
+        function updateStats() {
+            document.getElementById('statsArticles').textContent = mockData.articles.length;
+            document.getElementById('statsUsers').textContent = mockData.users.length;
+            document.getElementById('statsComments').textContent = mockData.comments.length;
+        }
+
+        function updateUserInterface() {
+            const userAvatar = document.getElementById('userAvatar');
+            const userName = document.getElementById('userName');
+            const loginBtn = document.getElementById('loginBtn');
+            const registerBtn = document.getElementById('registerBtn');
+            
+            if (mockData.currentUser) {
+                userAvatar.textContent = getInitials(mockData.currentUser.name);
+                userName.textContent = mockData.currentUser.name;
+                loginBtn.textContent = 'Déconnexion';
+                loginBtn.classList.remove('btn-outline');
+                loginBtn.classList.add('btn-primary');
+                registerBtn.classList.add('hidden');
+            } else {
+                userAvatar.textContent = 'V';
+                userName.textContent = 'Visiteur';
+                loginBtn.textContent = 'Connexion';
+                loginBtn.classList.remove('btn-primary');
+                loginBtn.classList.add('btn-outline');
+                registerBtn.classList.remove('hidden');
+            }
+        }
+
+        // Fonctions de gestion des données
+        function loginUser() {
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            // Simulation de connexion
+            const user = mockData.users.find(u => u.email === email);
+            
+            if (user) {
+                mockData.currentUser = user;
+                updateUserInterface();
+                showMessage('Connexion réussie !', 'success');
+                renderHomePage();
+            } else {
+                showMessage('Email ou mot de passe incorrect.', 'error');
+            }
+        }
+
+        function logoutUser() {
+            mockData.currentUser = null;
+            updateUserInterface();
+            showMessage('Déconnexion réussie.', 'success');
+            renderHomePage();
+        }
+
+        function registerUser() {
+            const username = document.getElementById('registerUsername').value;
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+            const confirmPassword = document.getElementById('registerConfirmPassword').value;
+            
+            if (password !== confirmPassword) {
+                showMessage('Les mots de passe ne correspondent pas.', 'error');
+                return;
+            }
+            
+            // Vérifier si l'utilisateur existe déjà
+            const existingUser = mockData.users.find(u => u.email === email || u.name === username);
+            if (existingUser) {
+                showMessage('Cet email ou nom d\'utilisateur est déjà utilisé.', 'error');
+                return;
+            }
+            
+            // Ajouter le nouvel utilisateur
+            const newUser = {
+                id: mockData.users.length + 1,
+                name: username,
+                email: email,
+                role: 'subscriber',
+                avatar: getInitials(username)
+            };
+            
+            mockData.users.push(newUser);
+            mockData.currentUser = newUser;
+            
+            updateUserInterface();
+            showMessage('Inscription réussie ! Bienvenue ' + username, 'success');
+            renderHomePage();
+        }
+
+        function createArticle() {
+            const title = document.getElementById('articleTitle').value;
+            const content = document.getElementById('articleContent').value;
+            const categoryId = document.getElementById('articleCategory').value;
+            const imageUrl = document.getElementById('articleImage').value;
+            
+            const category = mockData.categories.find(c => c.id == categoryId);
+            
+            const newArticle = {
+                id: mockData.articles.length + 1,
+                title: title,
+                content: content,
+                excerpt: content.length > 150 ? content.substring(0, 150) + '...' : content,
+                author: mockData.currentUser.name,
+                category: category ? category.name : 'Non catégorisé',
+                date: new Date().toISOString().split('T')[0],
+                views: 0,
+                comments: 0,
+                image: imageUrl || null
+            };
+            
+            mockData.articles.unshift(newArticle); // Ajouter au début
+            
+            // Mettre à jour le compteur de catégorie
+            if (category) {
+                category.count++;
+            }
+            
+            showMessage('Article publié avec succès !', 'success');
+            renderHomePage();
+        }
+
+        function addComment(articleId) {
+            const content = document.getElementById('commentContent').value;
+            
+            if (!content.trim()) {
+                showMessage('Le commentaire ne peut pas être vide.', 'error');
+                return;
+            }
+            
+            let author = null;
+            let email = null;
+            let isVisitor = true;
+            let visitorName = null;
+            
+            if (mockData.currentUser) {
+                author = mockData.currentUser.name;
+                email = mockData.currentUser.email;
+                isVisitor = false;
+            } else {
+                visitorName = document.getElementById('commentName').value;
+                email = document.getElementById('commentEmail').value;
+                
+                if (!visitorName.trim() || !email.trim()) {
+                    showMessage('Veuillez remplir tous les champs pour les visiteurs.', 'error');
+                    return;
+                }
+            }
+            
+            const newComment = {
+                id: mockData.comments.length + 1,
+                articleId: articleId,
+                author: author,
+                email: email,
+                content: content,
+                date: new Date().toISOString().split('T')[0],
+                isVisitor: isVisitor,
+                visitorName: visitorName
+            };
+            
+            mockData.comments.push(newComment);
+            
+            // Mettre à jour le compteur de commentaires de l'article
+            const article = mockData.articles.find(a => a.id == articleId);
+            if (article) {
+                article.comments++;
+            }
+            
+            showMessage('Commentaire ajouté avec succès !', 'success');
+            renderArticlePage(articleId);
+        }
+
+        // Attacher les événements
+        function attachArticleListeners() {
+            document.querySelectorAll('.view-article').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const articleId = e.target.closest('.view-article').dataset.articleId;
+                    renderArticlePage(articleId);
+                });
+            });
+        }
+
+        function attachCategoryFilterListeners() {
+            document.querySelectorAll('.filter-category').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const categoryId = e.target.closest('.filter-category').dataset.categoryId;
+                    const category = mockData.categories.find(c => c.id == categoryId);
+                    
+                    if (category) {
+                        showMessage(`Filtrage des articles de la catégorie: ${category.name}`, 'info');
+                        // Ici, vous pourriez filtrer les articles par catégorie
+                    }
+                });
+            });
+        }
+
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', () => {
+            initData();
+            renderHomePage();
+            updateUserInterface();
+            
+            // Navigation
+            document.getElementById('homeLink').addEventListener('click', (e) => {
+                e.preventDefault();
+                renderHomePage();
+            });
+            
+            document.getElementById('createArticleLink').addEventListener('click', (e) => {
+                e.preventDefault();
+                renderCreateArticlePage();
+            });
+            
+            document.getElementById('categoriesLink').addEventListener('click', (e) => {
+                e.preventDefault();
+                // Pour l'instant, on revient à la page d'accueil
+                renderHomePage();
+            });
+            
+            // Bouton de connexion/déconnexion
+            document.getElementById('loginBtn').addEventListener('click', (e) => {
+                e.preventDefault();
+                if (mockData.currentUser) {
+                    logoutUser();
+                } else {
+                    renderLoginPage();
+                }
+            });
+            
+            // Bouton d'inscription
+            document.getElementById('registerBtn').addEventListener('click', (e) => {
+                e.preventDefault();
+                renderLoginPage();
+                // Activer l'onglet d'inscription
+                setTimeout(() => {
+                    document.getElementById('registerTab').click();
+                }, 100);
+            });
+            
+            // Liens du footer
+            document.getElementById('footerHomeLink').addEventListener('click', (e) => {
+                e.preventDefault();
+                renderHomePage();
+            });
+            
+            document.getElementById('footerCreateLink').addEventListener('click', (e) => {
+                e.preventDefault();
+                renderCreateArticlePage();
+            });
+            
+            document.getElementById('footerCategoriesLink').addEventListener('click', (e) => {
+                e.preventDefault();
+                renderHomePage();
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,9 +1,12 @@
 <?php
-require_once 'includes/auth.php';
+require_once 'includes/functions.php';
 
+session_start();
+
+// Détruire la session
 session_destroy();
-$_SESSION = array();
 
-header('Location: login.php');
+// Rediriger vers la page d'accueil
+header('Location: index.php');
 exit();
 ?>

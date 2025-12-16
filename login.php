@@ -1,68 +1,59 @@
 <?php
-require_once 'includes/auth.php';
-require_once 'includes/functions.php';
+require_once 'includes/header.php';
 
+// Si l'utilisateur est déjà connecté, rediriger vers l'accueil
 if (isLoggedIn()) {
-    redirect('dashboard.php');
+    header('Location: index.php');
+    exit();
 }
 
-$error = '';
-
+// Traitement du formulaire de connexion
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = $_POST['email'] ?? '';
     $password = $_POST['password'] ?? '';
     
-    if (empty($email) || empty($password)) {
-        $error = 'Veuillez remplir tous les champs';
-    } else {
-        $pdo = getPDO();
-        $stmt = $pdo->prepare("SELECT * FROM utilisateur WHERE email = :email");
-        $stmt->execute([':email' => $email]);
-        $user = $stmt->fetch();
+    $user = verifyUserCredentials($email, $password);
+    
+    if ($user) {
+        $_SESSION['user_nom'] = $user['NOM'];
+        $_SESSION['user_email'] = $user['EMAIL'];
+        $_SESSION['user_role'] = $user['UTILISATEUR_ROLE'];
         
-        if ($user && verifyPassword($password, $user['mot_de_passe'])) {
-            $_SESSION['user'] = $user;
-            $_SESSION['success'] = 'Connexion réussie !';
-            redirect('dashboard.php');
-        } else {
-            $error = 'Email ou mot de passe incorrect';
-        }
+        $_SESSION['success_message'] = 'Connexion réussie ! Bienvenue ' . $user['NOM'];
+        header('Location: index.php');
+        exit();
+    } else {
+        $error = 'Email ou mot de passe incorrect.';
     }
 }
 ?>
-<?php 
-$page_title = 'Connexion';
-include 'includes/header.php'; 
-?>
-<div class="row justify-content-center">
-    <div class="col-md-6">
-        <div class="card">
-            <div class="card-header">
-                <h4 class="mb-0">Connexion</h4>
+
+<div class="auth-container" style="display: flex; justify-content: center; align-items: center; min-height: 70vh;">
+    <div class="auth-card" style="background-color: white; border-radius: var(--border-radius); box-shadow: var(--shadow); padding: 40px; width: 100%; max-width: 500px;">
+        <h2 class="modal-title" style="font-size: 1.8rem; margin-bottom: 30px; color: var(--primary); text-align: center;">Connexion</h2>
+        
+        <?php if (isset($error)): ?>
+            <div class="message error" style="margin-bottom: 20px;">
+                <?php echo $error; ?>
             </div>
-            <div class="card-body">
-                <?php if ($error): ?>
-                    <div class="alert alert-danger"><?php echo escape($error); ?></div>
-                <?php endif; ?>
-                
-                <form method="POST" action="">
-                    <div class="mb-3">
-                        <label for="email" class="form-label">Email</label>
-                        <input type="email" class="form-control" id="email" name="email" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="password" class="form-label">Mot de passe</label>
-                        <input type="password" class="form-control" id="password" name="password" required>
-                    </div>
-                    <button type="submit" class="btn btn-primary w-100">Se connecter</button>
-                </form>
-                
-                <hr>
-                <p class="text-center mb-0">
-                    Pas encore de compte ? <a href="register.php">S'inscrire</a>
-                </p>
+        <?php endif; ?>
+        
+        <form method="POST" action="login.php">
+            <div class="form-group" style="margin-bottom: 20px;">
+                <label for="email" style="display: block; margin-bottom: 8px; font-weight: 500;">Email</label>
+                <input type="email" id="email" name="email" class="form-control" required style="width: 100%; padding: 12px 15px; border: 1px solid #ddd; border-radius: var(--border-radius); font-size: 1rem;">
             </div>
-        </div>
+            <div class="form-group" style="margin-bottom: 20px;">
+                <label for="password" style="display: block; margin-bottom: 8px; font-weight: 500;">Mot de passe</label>
+                <input type="password" id="password" name="password" class="form-control" required style="width: 100%; padding: 12px 15px; border: 1px solid #ddd; border-radius: var(--border-radius); font-size: 1rem;">
+            </div>
+            <button type="submit" class="btn btn-primary" style="width: 100%;">Se connecter</button>
+        </form>
+        
+        <p style="text-align: center; margin-top: 20px; color: var(--gray);">
+            Pas encore de compte ? <a href="register.php" style="color: var(--primary); text-decoration: none;">Inscrivez-vous</a>
+        </p>
     </div>
 </div>
-<?php include 'includes/footer.php'; ?>
+
+<?php require_once 'includes/footer.php'; ?>
