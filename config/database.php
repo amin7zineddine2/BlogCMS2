@@ -3,24 +3,31 @@ class Database {
     private $conn;
     
     public function __construct() {
-        try {
-            $db_host = 'localhost';
-            $db_port = '1521';
-            $db_service = 'ORCL';
-            $db_user = 'system';  
-            $db_pass = 'aminblayza'; 
-            
-            $tns = "(DESCRIPTION = (ADDRESS = (PROTOCOL = TCP)(HOST = $db_host)(PORT = $db_port)) (CONNECT_DATA = (SERVER = DEDICATED) (SERVICE_NAME = $db_service)))";
-            
-            $this->conn = oci_connect($db_user, $db_pass, $tns, 'AL32UTF8');
-            
-            if (!$this->conn) {
-                $e = oci_error();
-                throw new Exception("Erreur de connexion Oracle: " . $e['message']);
-            }
-        } catch (Exception $e) {
-            die("Erreur de connexion à la base de données: " . $e->getMessage());
-        }
+    try {
+    $db_host = 'localhost';
+    $db_port = '1521';
+    $db_service = 'XE'; 
+    $db_user = 'Dev Test 2';   
+    $db_pass = 'aminblayza';
+
+    $conn = oci_connect(
+        $db_user,
+        $db_pass,
+        "//{$db_host}:{$db_port}/{$db_service}",
+        'AL32UTF8'
+    );
+
+    if (!$conn) {
+        $e = oci_error();
+        throw new Exception($e['message']);
+    }
+
+    oci_set_module_name($conn, 'BlogCMS');
+    oci_set_client_identifier($conn, $db_user);
+
+} catch (Exception $e) {
+    die("Oracle connection failed: " . $e->getMessage());
+}
     }
     
     public function getConnection() {

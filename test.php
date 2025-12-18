@@ -1,3 +1,1 @@
-<?php
-echo "My website is working!";
-?>
+<?php phpinfo();
