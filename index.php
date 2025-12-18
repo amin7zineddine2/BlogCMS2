@@ -1,7 +1,6 @@
 <?php
 require_once 'includes/header.php';
 
-// Récupérer les articles
 $articles = getAllArticles(12, 0);
 $categories = getAllCategories();
 ?>
@@ -64,7 +63,6 @@ $categories = getAllCategories();
                                     <i class="fas fa-comment"></i>
                                     <span>
                                         <?php 
-                                        // Compter les commentaires pour cet article
                                         try {
                                             $comments = getCommentsByArticleId($article['ARTICLE_ID']);
                                             echo count($comments);
@@ -113,7 +111,6 @@ $categories = getAllCategories();
             <h3 class="sidebar-title" style="font-size: 1.4rem; margin-bottom: 20px; color: var(--dark);">Articles populaires</h3>
             <div id="popularArticles">
                 <?php 
-                // Récupérer les articles les plus vus
                 try {
                     $popularArticles = getAllArticles(3, 0);
                     foreach ($popularArticles as $article): 
