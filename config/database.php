@@ -9,8 +9,8 @@ class Database {
             $db_host = 'localhost';
             $db_port = '1521';
             $db_service = 'ORCL';
-            $db_user = 'VOTRE_UTILISATEUR';  // À modifier
-            $db_pass = 'VOTRE_MOT_DE_PASSE'; // À modifier
+            $db_user = 'system';  
+            $db_pass = 'aminblayza'; 
             
             $tns = "(DESCRIPTION = (ADDRESS = (PROTOCOL = TCP)(HOST = $db_host)(PORT = $db_port)) (CONNECT_DATA = (SERVER = DEDICATED) (SERVICE_NAME = $db_service)))";
             

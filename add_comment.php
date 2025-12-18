@@ -12,12 +12,11 @@ $articleId = $_POST['article_id'] ?? 0;
 $contenu = $_POST['content'] ?? '';
 
 if (empty($articleId) || empty($contenu)) {
-    $_SESSION['error_message'] = 'Veuillez remplir tous les champs.';
+    $_SESSION['error_message'] = 'vous pouvez remplire tout les champs';
     header('Location: view_article.php?id=' . $articleId);
     exit();
 }
 
-// Déterminer l'auteur du commentaire
 $auteurNom = null;
 $email = null;
 
@@ -35,7 +34,6 @@ if (isLoggedIn()) {
     }
 }
 
-// Ajouter le commentaire
 $success = addComment($articleId, $auteurNom, $email, $contenu);
 
 if ($success) {
