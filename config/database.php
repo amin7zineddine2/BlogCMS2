@@ -1,11 +1,9 @@
 <?php
-// Configuration de la connexion Oracle
 class Database {
     private $conn;
     
     public function __construct() {
         try {
-            // Configuration Oracle - Ajustez selon votre environnement
             $db_host = 'localhost';
             $db_port = '1521';
             $db_service = 'ORCL';
@@ -37,7 +35,6 @@ class Database {
             throw new Exception("Erreur de préparation Oracle: " . $e['message']);
         }
         
-        // Liaison des paramètres
         foreach ($params as $key => $value) {
             oci_bind_by_name($stid, $key, $params[$key]);
         }
@@ -64,7 +61,6 @@ class Database {
             throw new Exception("Erreur de préparation Oracle: " . $e['message']);
         }
         
-        // Liaison des paramètres
         foreach ($params as $key => $value) {
             oci_bind_by_name($stid, $key, $params[$key]);
         }
@@ -93,6 +89,5 @@ class Database {
     }
 }
 
-// Créer une instance globale de la base de données
 $db = new Database();
 ?>
